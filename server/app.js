@@ -1,47 +1,19 @@
-const express = require("express")
+// app.js
+const express = require("express");
+const routes = require("./routes");
 
-const app = express()
-const puerto = 3000
-const baseURL = "./emercado-api-main/"
-let cat = require( baseURL + 'cats/cat.json')
-let cats_products = require( baseURL + 'cats_products/cat_products.json')
+const app = express();
 
+const puerto = 3000;
 
-app.get('/cat', (req , res) => {
-    res.send(cat)
-})
-
-app.get('/cats_products/:id', async (req, res) => {
-    const categoryId = req.params.id;
-    const fileName = `cats_products/${categoryId}.json`;
-
-    try {
-        const data = await readJsonFile(fileName);
-        res.json(data);
-    } catch (error) {
-        res.status(404).json({ error: 'Categoría no encontrada.' });
-    }
+app.listen(puerto, () => {
+  console.log(`✓ Servidor funcionando en http://localhost:${puerto}`);
 });
 
+// Middlewares
+app.use(express.json());
 
-// 2. GET para los detalles de un producto
-// Ejemplo de uso: GET /products/40281
-app.get('/products/:id', async (req, res) => {
-    const productId = req.params.id;
-    const fileName = `products/${productId}.json`;
+// Rutas
+app.use("/", routes);
 
-    try {
-        const data = await readJsonFile(fileName);
-        res.json(data);
-    } catch (error) {
-        res.status(404).json({ error: 'Producto no encontrado.' });
-    }
-});
-
-app.get('/', (req , res) => {
-    res.send(cat)
-})
-
-app.listen(puerto, ()=>{
-    console.log("Servidor funcionando")
-})
+module.exports = app;
