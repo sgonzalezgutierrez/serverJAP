@@ -2,12 +2,13 @@
 const express = require("express")
 const routes = require("./routes");
 const jwt = require('jsonwebtoken')
+const cors = require("cors");
 const app = express()
 const baseURL = "./emercado-api-main/"
 let cat = require( baseURL + 'cats/cat.json')
 const SECRET_KEY = 'mi_clave_secreta_super_segura_123' 
 // let cats_products = require( baseURL + 'cats_products/cat_products.json')
-
+app.use(cors());
 const puerto = 3000;
 
 app.listen(puerto, () => {
