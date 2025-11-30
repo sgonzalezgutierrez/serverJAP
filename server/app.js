@@ -11,8 +11,24 @@ const SECRET_KEY = 'mi_clave_secreta_super_segura_123'
 app.use(cors());
 const puerto = 3000;
 
-app.listen(puerto, () => {
-  console.log(`✓ Servidor funcionando en http://localhost:${puerto}`);
+// Autoriza el acceso mediante el token
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {
+        return res.sendStatus(401); // 401 No autorizado si no hay token
+    }
+
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.sendStatus(403); // 403 Prohibido si el token no es válido
+        }
+        req.user = user; 
+        next(); 
+        });
+    }
+
+
 app.post('/login', (req, res) => {
     const { username, password } = req.body
     
@@ -38,13 +54,9 @@ app.post('/login', (req, res) => {
         token: token,
         user: username
     })
-})
 });
 
-// Middlewares
-app.use(express.json());
-
-// Rutas
-app.use("/", routes);
+// Middleware aplicado a las rutas
+app.use("/", authenticateToken, routes);
 
 module.exports = app;
