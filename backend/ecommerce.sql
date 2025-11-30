@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS ecommerce;
-USE ecommerce;
-
 CREATE TABLE IF NOT EXISTS Usuario (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
